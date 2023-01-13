@@ -1,0 +1,21 @@
+face_detection:
+    model_config_path: './models/detection/scrfd/configs/scrfd/scrfd_2.5g_bnkps.py''
+    model_path: "./workspace/scrfd_2.5g_bnkps.pth"
+
+    input_dims: [1, 3, 640, 640]
+    input_image: "./workspace/samples/scrfd_demo.jpg"
+    std: [127.5, 127.5, 127.5]
+    mean: [128.0, 128.0, 128.0]
+
+
+
+face_recognition:
+    model_name: r50
+    model_path: "./workspace/arcface_r50.pth"
+
+    input_dims: [1, 3, 112, 112]
+    input_image: "./workspace/samples/demo_rec.jpg"
+
+convert_type: ["torchscript", "onnx"]
+cpu_only: True
+workspace: 4

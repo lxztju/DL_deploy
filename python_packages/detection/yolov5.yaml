@@ -1,0 +1,12 @@
+model_params:
+    name: "yolov5s"
+    num_classes: 80
+    weights: "./workspace/yolov5s.pt"
+
+data_params:
+    imgsz: [640, 640]
+    input_image: "./workspace/samples/demo.jpg"
+    batch_size: 1
+
+
+convert_type: ["torchscript", "onnx"]
