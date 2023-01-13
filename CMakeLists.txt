@@ -14,12 +14,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(CMAKE_BUILD_TYPE Release)
 
 
-set(3RDPARTY ${CMAKE_CURRENT_SOURCE_DIR}/3rd)
+set(3RDPARTY ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
 
 
 # # 两个必要的依赖包
-set(OpenCV_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rd/opencv-3.4.15/share/OpenCV)
-set(Torch_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rd/libtorch/share/cmake/Torch)
+set(OpenCV_DIR ${3RDPARTY}/opencv-3.4.15/share/OpenCV)
+set(Torch_DIR ${3RDPARTY}/libtorch/share/cmake/Torch)
 find_package(OpenCV REQUIRED)
 find_package(Torch REQUIRED)
 
@@ -33,18 +33,22 @@ include_directories(
     ${3RDPARTY}/onnxruntime-linux-x64-1.10.0/include
     ${TORCH_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/classification/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/examples/classification/include
     ${CMAKE_CURRENT_SOURCE_DIR}/core/include/torchBackend
     ${CMAKE_CURRENT_SOURCE_DIR}/core/include/onnxruntimeBackend
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/include
-)
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/include/common
+
+    )
 
 FILE(GLOB BACKEND_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/core/src/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core/src/torchBackend/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core/src/onnxruntimeBackend/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/src/common/*.cpp
+
     )
-    message(STATUS "BACKEND_SRC: ${BACKEND_SRC}")
+message(STATUS "BACKEND_SRC: ${BACKEND_SRC}")
 
 # add_library(Backend SHARED ${BACKEND_SRC})
 # target_link_libraries(
@@ -70,7 +74,7 @@ target_link_libraries(
 )
 
 
-add_executable(cls_test main_test.cpp classification/src/img_cls.cpp ${BACKEND_SRC})
+add_executable(cls_test main.cpp examples/classification/src/img_cls.cpp ${BACKEND_SRC})
 target_link_libraries(
     cls_test
     torchscriptBackend
