@@ -8,9 +8,9 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 
 import torch
-from python_packages.tools import LOGGER, load_yaml_file
+from tools import LOGGER, load_yaml_file
 import numpy as np
-from models.detection.scrfd.mmdet.core import (build_model_from_cfg, generate_inputs_and_wrap_model,
+from insightface.detection.scrfd.mmdet.core import (build_model_from_cfg, generate_inputs_and_wrap_model,
                         preprocess_example_input)
 
 class ScrfdExportor:

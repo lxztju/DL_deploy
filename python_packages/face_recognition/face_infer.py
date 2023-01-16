@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
 
-from python_packages.common.multibackend_infer import MultiBackendInfer
+from common.multibackend_infer import MultiBackendInfer
 
 
 class ScrfdInfer:
