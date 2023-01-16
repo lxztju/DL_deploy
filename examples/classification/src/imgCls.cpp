@@ -1,4 +1,4 @@
-#include "img_cls.hpp"
+#include "imgCls.hpp"
 #include "simpleLogger.hpp"
 #include "backendFactory.hpp"
 // #include "torchBackend.hpp"
@@ -19,6 +19,27 @@ ImgCls::ImgCls(const std::string& modelPath, const std::string& backendType, int
         }
 
 
+int ImgCls::preprocessImage(cv::Mat& image){
+    cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
+    cv::resize(image, image, cv::Size(clsWidth, clsHeight));
+    image.convertTo(image, CV_32FC3, 1.0 / 255);
+
+    // hwc-> chw
+    std::vector<cv::Mat> splitImg(image.channels());
+    cv::split(image, splitImg);
+
+    //normalize
+    for (int i = 0; i < image.channels(); ++i)
+    {
+        splitImg[i].convertTo(splitImg[i], CV_32FC1, 1.0 / std_[i], (0.0 - mean_[i]) / std_[i]);
+
+    }
+    // hwc
+    cv::merge(splitImg, image);
+    return 0;
+}
+
+
 
 int ImgCls::runImg(std::vector<std::string>& imgPaths, std::tuple<std::vector<int64_t>, std::vector<float>>& res){
 
@@ -27,22 +48,8 @@ int ImgCls::runImg(std::vector<std::string>& imgPaths, std::tuple<std::vector<in
     for (auto imgPath:imgPaths){
         cv::Mat image = cv::imread(imgPath);
 
-        cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
-        cv::resize(image, image, cv::Size(clsWidth, clsHeight));
-        image.convertTo(image, CV_32FC3, 1.0 / 255);
+        auto re = preprocessImage(image);
 
-        // hwc-> chw
-        std::vector<cv::Mat> splitImg(image.channels());
-        cv::split(image, splitImg);
-
-        //normalize
-        for (int i = 0; i < image.channels(); ++i)
-        {
-            splitImg[i].convertTo(splitImg[i], CV_32FC1, 1.0 / std_[i], (0.0 - mean_[i]) / std_[i]);
-
-        }
-        // hwc
-        cv::merge(splitImg, image);
         images.push_back(image); 
     }
 

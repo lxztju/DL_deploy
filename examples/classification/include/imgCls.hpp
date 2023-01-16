@@ -21,6 +21,9 @@ public:
 public:
     int runImg(std::vector<std::string>& imgPaths, std::tuple<std::vector<int64_t>, std::vector<float>>& res);
 
+private:
+    int preprocessImage(cv::Mat& images);
+
 
 private:
     std::string modelPath;
