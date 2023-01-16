@@ -14,10 +14,10 @@ import torch.onnx
 from PIL import Image
 import numpy as np
 
-from models.cls_models import ClsModel
-from models.dataset import val_transform
+from pytorch_classification.cls_models import ClsModel
+from pytorch_classification.dataset import val_transform
 
-from python_packages.tools.load_yamls import load_yaml_file
+from tools.load_yamls import load_yaml_file
 
 
 def img_process(img_path):
