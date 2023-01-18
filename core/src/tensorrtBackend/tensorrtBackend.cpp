@@ -73,8 +73,8 @@ int TensorRTBackend::inference(std::vector<cv::Mat>& imgMats, std::vector<std::v
     }
         checkRuntime(cudaMemcpyAsync(inputDataDevicePtr, inputDataHostPtr, inputNumel * sizeof(float), cudaMemcpyHostToDevice, stream));
 
-        const int num_classes = bindingDims[1].d[1];
-        float outputDataHost[num_classes * inputDim.d[0]];
+        const int outputDim = bindingDims[1].d[1] * inputDim.d[0];
+        float outputDataHost[outputDim];
         float* outputDataDevicePtr = nullptr;
         checkRuntime(cudaMalloc(&outputDataDevicePtr, sizeof(outputDataHost)));
         // nvinfer1::Dims contextInputDims = execution_context->getBindingDimensions(0);
@@ -87,8 +87,8 @@ int TensorRTBackend::inference(std::vector<cv::Mat>& imgMats, std::vector<std::v
         checkRuntime(cudaStreamSynchronize(stream));
         for (int imgIdx = 0; imgIdx < inputDim.d[0]; imgIdx++){
             std::vector<float> outputDataHostVector;
-            for(int j =0; j< num_classes; j++){
-                outputDataHostVector.push_back(outputDataHost[imgIdx * num_classes + j]);
+            for(int j =0; j< bindingDims[1].d[1]; j++){
+                outputDataHostVector.push_back(outputDataHost[imgIdx * bindingDims[1].d[1] + j]);
             }
             
         result.push_back(outputDataHostVector);
